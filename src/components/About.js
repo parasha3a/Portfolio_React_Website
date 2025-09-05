@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaCode, FaLightbulb, FaRocket } from 'react-icons/fa';
+import { FaCode } from 'react-icons/fa';
 
 const AboutSection = styled.section`
   padding: 6rem 2rem;
@@ -255,36 +255,6 @@ function About() {
               <CardTitle>Full-Stack Разработка</CardTitle>
               <CardText>
                 Создаю полноценные веб-приложения от фронтенда до бэкенда
-              </CardText>
-            </FloatingCard>
-            
-            <FloatingCard
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <CardIcon>
-                <FaLightbulb />
-              </CardIcon>
-              <CardTitle>Креативные Решения</CardTitle>
-              <CardText>
-                Подход на стыке аналитики и творчества
-              </CardText>
-            </FloatingCard>
-            
-            <FloatingCard
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              viewport={{ once: true }}
-            >
-              <CardIcon>
-                <FaRocket />
-              </CardIcon>
-              <CardTitle>Экспериментальные Проекты</CardTitle>
-              <CardText>
-                Смелые эксперименты и нестандартные подходы
               </CardText>
             </FloatingCard>
           </VisualContent>

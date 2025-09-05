@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaPython, FaJs } from 'react-icons/fa';
@@ -393,6 +393,19 @@ const projects = [
 ];
 
 function Projects() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+  
   return (
     <ProjectsSection id="projects">
       <Container>
@@ -439,22 +452,9 @@ function Projects() {
         
         <ProjectsGrid>
           {projects.map((project, index) => (
-            <ElectricBorder
-              key={project.title}
-              color="#00ff88"
-              speed={1}
-              chaos={0.5}
-              thickness={2}
-              style={{ 
-                borderRadius: 20, 
-                height: '100%', 
-                width: '100%',
-                margin: 0, 
-                padding: 0,
-                boxSizing: 'border-box'
-              }}
-            >
+            isMobile ? (
               <ProjectCard
+                key={project.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
@@ -502,7 +502,72 @@ function Projects() {
                   </ProjectLinks>
                 </ProjectContent>
               </ProjectCard>
-            </ElectricBorder>
+            ) : (
+              <ElectricBorder
+                key={project.title}
+                color="#00ff88"
+                speed={1}
+                chaos={0.5}
+                thickness={2}
+                style={{ 
+                  borderRadius: 20, 
+                  height: '100%', 
+                  width: '100%',
+                  margin: 0, 
+                  padding: 0,
+                  boxSizing: 'border-box'
+                }}
+              >
+                <ProjectCard
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <ProjectImage>
+                    <ProjectIcon>{project.icon}</ProjectIcon>
+                  </ProjectImage>
+                  
+                  <ProjectContent>
+                    <ProjectTitle>{project.title}</ProjectTitle>
+                    <ProjectDescription>{project.description}</ProjectDescription>
+                    
+                    <ProjectTech>
+                      {project.tech.map((tech) => (
+                        <TechTag key={tech}>{tech}</TechTag>
+                      ))}
+                    </ProjectTech>
+                    
+                    <ProjectLinks>
+                      <ProjectLink
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FaGithub size={16} />
+                        Код
+                      </ProjectLink>
+                      
+                      {project.live && (
+                        <ProjectLink
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <FaExternalLinkAlt size={16} />
+                          Демо
+                        </ProjectLink>
+                      )}
+                    </ProjectLinks>
+                  </ProjectContent>
+                </ProjectCard>
+              </ElectricBorder>
+            )
           ))}
         </ProjectsGrid>
       </Container>
