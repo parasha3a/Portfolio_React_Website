@@ -11,10 +11,20 @@ const HeroSection = styled.section`
   padding: 0 2rem;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 0.5rem;
+  }
 `;
 
 const HeroContent = styled.div`
   max-width: 1200px;
+  width: 100%;
   text-align: center;
   z-index: 10;
   position: relative;
@@ -24,6 +34,19 @@ const HeroContent = styled.div`
   padding: 3rem 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+    margin: 0.5rem;
+    border-radius: 15px;
+  }
 `;
 
 const Greeting = styled(motion.div)`
@@ -32,10 +55,20 @@ const Greeting = styled(motion.div)`
   margin-bottom: 1rem;
   font-weight: 500;
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.3);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const Name = styled(motion.h1)`
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #ffffff 0%, #00ff88 100%);
@@ -44,10 +77,16 @@ const Name = styled(motion.h1)`
   background-clip: text;
   text-shadow: 0 0 30px rgba(0, 255, 136, 0.8), 0 0 60px rgba(0, 255, 136, 0.4);
   filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6));
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 480px) {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
 `;
 
 const Title = styled(motion.h2)`
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.2rem, 3vw, 2rem);
   font-weight: 400;
   color: #ffffff;
   margin-bottom: 2rem;
@@ -55,6 +94,12 @@ const Title = styled(motion.h2)`
   margin-left: auto;
   margin-right: auto;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 2px 4px rgba(0, 0, 0, 0.8);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 480px) {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+  }
 `;
 
 const Description = styled(motion.p)`
@@ -66,6 +111,19 @@ const Description = styled(motion.p)`
   margin-right: auto;
   line-height: 1.8;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.8);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 0 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    padding: 0 0.25rem;
+  }
 `;
 
 const CTAButtons = styled(motion.div)`
@@ -73,10 +131,16 @@ const CTAButtons = styled(motion.div)`
   gap: 1.5rem;
   justify-content: center;
   margin-bottom: 4rem;
+  flex-wrap: wrap;
   
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 0.75rem;
   }
 `;
 
@@ -93,12 +157,24 @@ const CTAButton = styled(motion.a)`
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3), 0 0 20px rgba(0, 255, 136, 0.2);
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  white-space: nowrap;
+  text-align: center;
   
   &:hover {
     background: #00ff88;
     color: #0a0a0a;
     box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6), 0 0 30px rgba(0, 255, 136, 0.4);
     transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    padding: 0.7rem 1.2rem;
   }
 `;
 
@@ -115,6 +191,8 @@ const SecondaryButton = styled(motion.a)`
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 0.05);
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  text-align: center;
   
   &:hover {
     border-color: #ffffff;
@@ -122,12 +200,31 @@ const SecondaryButton = styled(motion.a)`
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
   }
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    padding: 0.7rem 1.2rem;
+  }
 `;
 
 const SocialLinks = styled(motion.div)`
   display: flex;
   gap: 1.5rem;
   justify-content: center;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 0.75rem;
+  }
 `;
 
 const SocialLink = styled(motion.a)`
@@ -152,6 +249,16 @@ const SocialLink = styled(motion.a)`
     background: rgba(0, 255, 136, 0.1);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 255, 136, 0.3), 0 0 20px rgba(0, 255, 136, 0.2);
+  }
+  
+  @media (max-width: 768px) {
+    width: 45px;
+    height: 45px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
   }
 `;
 
@@ -206,7 +313,9 @@ function Hero() {
             Посмотреть работы
           </CTAButton>
           <SecondaryButton
-            href="#contact"
+            href="https://t.me/wrk_24_8"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -236,7 +345,9 @@ function Hero() {
             <FaLinkedin size={20} />
           </SocialLink>
           <SocialLink
-            href="#"
+            href="https://t.me/wrk_24_8"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >

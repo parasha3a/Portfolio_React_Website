@@ -6,7 +6,6 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
 import PixelBlast from './components/PixelBlast';
 import logo from './assets/logo.svg';
@@ -72,8 +71,8 @@ function App() {
       bgColor: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
       textColor: "#ffffff",
       links: [
-        { label: "Технологии", ariaLabel: "Стек технологий" },
-        { label: "Проекты", ariaLabel: "Портфолио проектов" }
+        { label: "Технологии", ariaLabel: "Стек технологий", href: "#skills" },
+        { label: "Проекты", ariaLabel: "Портфолио проектов", href: "#projects" }
       ]
     },
     {
@@ -81,20 +80,10 @@ function App() {
       bgColor: "linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)",
       textColor: "#ffffff",
       links: [
-        { label: "Портфолио", ariaLabel: "Портфолио проектов" },
-        { label: "GitHub", ariaLabel: "GitHub репозитории" }
+        { label: "Портфолио", ariaLabel: "Портфолио проектов", href: "#projects" },
+        { label: "GitHub", ariaLabel: "GitHub репозитории", href: "https://github.com/parasha3a", external: true }
       ]
     },
-    {
-      label: "Контакты",
-      bgColor: "linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)", 
-      textColor: "#ffffff",
-      links: [
-        { label: "Email", ariaLabel: "Email" },
-        { label: "Telegram", ariaLabel: "Telegram" },
-        { label: "LinkedIn", ariaLabel: "LinkedIn" }
-      ]
-    }
   ];
 
   if (loading) {
@@ -154,7 +143,6 @@ function App() {
           <About />
           <Skills />
           <Projects />
-          <Contact />
           <Footer />
         </AnimatePresence>
       </ContentWrapper>

@@ -2,15 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaPython, FaJs } from 'react-icons/fa';
+import ElectricBorder from './ElectricBorder';
 
 const ProjectsSection = styled.section`
   padding: 6rem 2rem;
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 3rem 0.5rem;
+  }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    padding: 0 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 0.25rem;
+  }
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -22,6 +43,16 @@ const SectionTitle = styled(motion.h2)`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const SectionSubtitle = styled(motion.p)`
@@ -32,6 +63,19 @@ const SectionSubtitle = styled(motion.p)`
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 0 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    padding: 0 0.25rem;
+  }
 `;
 
 const ProjectsGrid = styled.div`
@@ -39,23 +83,38 @@ const ProjectsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
+  align-items: stretch;
+  padding: 0 1rem;
+  box-sizing: border-box;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 1rem;
+    padding: 0 0.25rem;
   }
 `;
 
 const ProjectCard = styled(motion.div)`
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: visible;
   transition: all 0.3s ease;
   cursor: pointer;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
   
   &:hover {
     transform: translateY(-10px);
-    border-color: rgba(0, 255, 136, 0.5);
     background: rgba(0, 255, 136, 0.05);
   }
 `;
@@ -68,6 +127,7 @@ const ProjectImage = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
+  border-radius: 20px 20px 0 0;
   
   &::before {
     content: '';
@@ -94,6 +154,9 @@ const ProjectIcon = styled.div`
 
 const ProjectContent = styled.div`
   padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ProjectTitle = styled.h3`
@@ -101,6 +164,17 @@ const ProjectTitle = styled.h3`
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const ProjectDescription = styled.p`
@@ -108,6 +182,16 @@ const ProjectDescription = styled.p`
   line-height: 1.6;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const ProjectTech = styled.div`
@@ -115,6 +199,10 @@ const ProjectTech = styled.div`
   gap: 0.5rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+  
+  @media (max-width: 480px) {
+    gap: 0.25rem;
+  }
 `;
 
 const TechTag = styled.span`
@@ -125,11 +213,32 @@ const TechTag = styled.span`
   font-size: 0.8rem;
   font-weight: 500;
   border: 1px solid rgba(0, 255, 136, 0.3);
+  white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
 `;
 
 const ProjectLinks = styled.div`
   display: flex;
   gap: 1rem;
+  margin-top: auto;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+  }
 `;
 
 const ProjectLink = styled(motion.a)`
@@ -144,11 +253,23 @@ const ProjectLink = styled(motion.a)`
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.3s ease;
+  white-space: nowrap;
   
   &:hover {
     border-color: #00ff88;
     background: rgba(0, 255, 136, 0.1);
     color: #00ff88;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    gap: 0.25rem;
   }
 `;
 
@@ -159,9 +280,17 @@ const FeaturedProject = styled(motion.div)`
   padding: 3rem;
   text-align: center;
   margin-bottom: 4rem;
+  box-sizing: border-box;
+  overflow: hidden;
   
   @media (max-width: 768px) {
     padding: 2rem;
+    margin: 0 1rem 3rem 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+    margin: 0 0.5rem 2rem 0.5rem;
   }
 `;
 
@@ -170,6 +299,17 @@ const FeaturedTitle = styled.h3`
   font-weight: 700;
   color: #00ff88;
   margin-bottom: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const FeaturedDescription = styled.p`
@@ -180,6 +320,18 @@ const FeaturedDescription = styled.p`
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    padding: 0 0.5rem;
+  }
 `;
 
 const FeaturedButton = styled(motion.a)`
@@ -194,20 +346,32 @@ const FeaturedButton = styled(motion.a)`
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
+  white-space: nowrap;
   
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
   }
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.2rem;
+    gap: 0.25rem;
+  }
 `;
 
 const projects = [
   {
-    title: 'GiftBuyer',
-    description: 'Python приложение для покупки подарков с интеллектуальными рекомендациями и системой управления бюджетом.',
-    tech: ['Python', 'AI/ML', 'Database'],
-    icon: <FaPython />,
-    github: 'https://github.com/parasha3a/GiftBuyer',
+    title: 'VK-Crypto-Tracker',
+    description: 'VK Mini App для отслеживания криптовалют с интерактивными графиками, P2P маркетплейсом и калькулятором валют.',
+    tech: ['TypeScript', 'React', 'VK Mini Apps'],
+    icon: <FaJs />,
+    github: 'https://github.com/parasha3a/VK-Crypto-Tracker',
     live: null
   },
   {
@@ -275,55 +439,70 @@ function Projects() {
         
         <ProjectsGrid>
           {projects.map((project, index) => (
-            <ProjectCard
+            <ElectricBorder
               key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
+              color="#00ff88"
+              speed={1}
+              chaos={0.5}
+              thickness={2}
+              style={{ 
+                borderRadius: 20, 
+                height: '100%', 
+                width: '100%',
+                margin: 0, 
+                padding: 0,
+                boxSizing: 'border-box'
+              }}
             >
-              <ProjectImage>
-                <ProjectIcon>{project.icon}</ProjectIcon>
-              </ProjectImage>
-              
-              <ProjectContent>
-                <ProjectTitle>{project.title}</ProjectTitle>
-                <ProjectDescription>{project.description}</ProjectDescription>
+              <ProjectCard
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <ProjectImage>
+                  <ProjectIcon>{project.icon}</ProjectIcon>
+                </ProjectImage>
                 
-                <ProjectTech>
-                  {project.tech.map((tech) => (
-                    <TechTag key={tech}>{tech}</TechTag>
-                  ))}
-                </ProjectTech>
-                
-                <ProjectLinks>
-                  <ProjectLink
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <FaGithub size={16} />
-                    Код
-                  </ProjectLink>
+                <ProjectContent>
+                  <ProjectTitle>{project.title}</ProjectTitle>
+                  <ProjectDescription>{project.description}</ProjectDescription>
                   
-                  {project.live && (
+                  <ProjectTech>
+                    {project.tech.map((tech) => (
+                      <TechTag key={tech}>{tech}</TechTag>
+                    ))}
+                  </ProjectTech>
+                  
+                  <ProjectLinks>
                     <ProjectLink
-                      href={project.live}
+                      href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <FaExternalLinkAlt size={16} />
-                      Демо
+                      <FaGithub size={16} />
+                      Код
                     </ProjectLink>
-                  )}
-                </ProjectLinks>
-              </ProjectContent>
-            </ProjectCard>
+                    
+                    {project.live && (
+                      <ProjectLink
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <FaExternalLinkAlt size={16} />
+                        Демо
+                      </ProjectLink>
+                    )}
+                  </ProjectLinks>
+                </ProjectContent>
+              </ProjectCard>
+            </ElectricBorder>
           ))}
         </ProjectsGrid>
       </Container>

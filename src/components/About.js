@@ -229,15 +229,15 @@ function About() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <StatNumber>3</StatNumber>
-                <StatLabel>Репозитория</StatLabel>
+                <StatNumber>50+</StatNumber>
+                <StatLabel>Довольных клиентов</StatLabel>
               </StatCard>
               <StatCard
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <StatNumber>14</StatNumber>
-                <StatLabel>Звезд</StatLabel>
+                <StatNumber>100+</StatNumber>
+                <StatLabel>Реализованных проектов</StatLabel>
               </StatCard>
             </StatsGrid>
           </TextContent>

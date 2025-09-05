@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { 
-  FaHtml5, FaCss3Alt, FaJs, FaReact, FaNode, FaPython, 
-  FaDatabase, FaCloud, FaTools
+  FaHtml5, FaCss3Alt, FaJs, FaNode, 
+  FaDatabase, FaCloud
 } from 'react-icons/fa';
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiPython, SiGit, SiDocker } from 'react-icons/si';
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiPython, SiGit, SiDocker, SiRust, SiSolidity, SiEthereum, SiWeb3Dotjs } from 'react-icons/si';
+import { IconContext } from 'react-icons';
 import LogoLoop from './LogoLoop';
 
 const SkillsSection = styled.section`
@@ -41,26 +42,33 @@ const SectionSubtitle = styled(motion.p)`
 
 const SkillsGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  flex-wrap: nowrap;
+  gap: 1rem;
   margin-bottom: 4rem;
   justify-content: center;
+  overflow-x: auto;
+  
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
   
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+    flex-wrap: wrap;
   }
 `;
 
 const SkillCategory = styled(motion.div)`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 1.5rem;
+  border-radius: 15px;
+  padding: 1rem;
   transition: all 0.3s ease;
   flex: 1;
-  min-width: 250px;
-  max-width: 300px;
+  min-width: 200px;
+  max-width: 220px;
   
   &:hover {
     transform: translateY(-5px);
@@ -68,26 +76,34 @@ const SkillCategory = styled(motion.div)`
     background: rgba(0, 255, 136, 0.05);
   }
   
+  @media (max-width: 1200px) {
+    min-width: 240px;
+    max-width: 280px;
+    padding: 1.2rem;
+  }
+  
   @media (max-width: 768px) {
     min-width: 280px;
     max-width: 100%;
+    padding: 1.5rem;
   }
 `;
 
 const CategoryHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
 `;
 
 const CategoryIcon = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #00ff88;
+  flex-shrink: 0;
 `;
 
 const CategoryTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #ffffff;
 `;
@@ -95,27 +111,30 @@ const CategoryTitle = styled.h3`
 const SkillsList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 `;
 
 const SkillItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.8rem;
 `;
 
 const SkillName = styled.span`
   color: #cccccc;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  flex: 1;
 `;
 
 const SkillLevel = styled.div`
-  width: 100px;
-  height: 6px;
+  width: 80px;
+  height: 5px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 `;
 
 const SkillProgress = styled(motion.div)`
@@ -126,45 +145,12 @@ const SkillProgress = styled(motion.div)`
 
 const SkillPercentage = styled.span`
   color: #00ff88;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  margin-left: 0.5rem;
+  margin-left: 0.4rem;
+  flex-shrink: 0;
 `;
 
-const TechnologiesGrid = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1.5rem;
-  margin-top: 3rem;
-`;
-
-const TechCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 255, 136, 0.5);
-    background: rgba(0, 255, 136, 0.1);
-  }
-`;
-
-const TechIcon = styled.div`
-  font-size: 2rem;
-  color: #00ff88;
-  margin-bottom: 0.5rem;
-`;
-
-const TechName = styled.div`
-  color: #ffffff;
-  font-size: 0.9rem;
-  font-weight: 500;
-`;
 
 const skillData = [
   {
@@ -198,6 +184,17 @@ const skillData = [
     ]
   },
   {
+    category: 'Web3 & Blockchain',
+    icon: <SiEthereum />,
+    skills: [
+      { name: 'Solidity', level: 75 },
+      { name: 'Rust', level: 70 },
+      { name: 'Smart Contracts', level: 80 },
+      { name: 'DeFi Protocols', level: 65 },
+      { name: 'Web3.js', level: 70 }
+    ]
+  },
+  {
     category: 'DevOps & Tools',
     icon: <FaCloud />,
     skills: [
@@ -209,24 +206,21 @@ const skillData = [
   }
 ];
 
-const technologies = [
-  { name: 'HTML5', icon: <FaHtml5 /> },
-  { name: 'CSS3', icon: <FaCss3Alt /> },
-  { name: 'JavaScript', icon: <FaJs /> },
-  { name: 'React', icon: <FaReact /> },
-  { name: 'Node.js', icon: <FaNode /> },
-  { name: 'Python', icon: <FaPython /> },
-  { name: 'Git', icon: <FaTools /> },
-  { name: 'Docker', icon: <FaCloud /> }
-];
 
 const techLogos = [
+  { node: <FaHtml5 />, title: "HTML5", href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+  { node: <FaCss3Alt />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+  { node: <FaJs />, title: "JavaScript", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
   { node: <SiReact />, title: "React", href: "https://react.dev" },
   { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
   { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
   { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
   { node: <SiNodedotjs />, title: "Node.js", href: "https://nodejs.org" },
   { node: <SiPython />, title: "Python", href: "https://python.org" },
+  { node: <SiRust />, title: "Rust", href: "https://rust-lang.org" },
+  { node: <SiSolidity />, title: "Solidity", href: "https://soliditylang.org" },
+  { node: <SiEthereum />, title: "Ethereum", href: "https://ethereum.org" },
+  { node: <SiWeb3Dotjs />, title: "Web3.js", href: "https://web3js.readthedocs.io" },
   { node: <SiGit />, title: "Git", href: "https://git-scm.com" },
   { node: <SiDocker />, title: "Docker", href: "https://docker.com" }
 ];
@@ -289,28 +283,6 @@ function Skills() {
           ))}
         </SkillsGrid>
         
-        <TechnologiesGrid
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          viewport={{ once: true }}
-        >
-          {technologies.map((tech, index) => (
-            <TechCard
-              key={tech.name}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <TechIcon>{tech.icon}</TechIcon>
-              <TechName>{tech.name}</TechName>
-            </TechCard>
-          ))}
-        </TechnologiesGrid>
-        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -329,18 +301,20 @@ function Skills() {
             alignItems: 'center'
           }}
         >
-          <LogoLoop
-            logos={techLogos}
-            speed={80}
-            direction="left"
-            logoHeight={48}
-            gap={40}
-            pauseOnHover
-            scaleOnHover
-            fadeOut
-            fadeOutColor="#1a1a1a"
-            ariaLabel="Technology partners"
-          />
+          <IconContext.Provider value={{ color: '#00ff88' }}>
+            <LogoLoop
+              logos={techLogos}
+              speed={80}
+              direction="left"
+              logoHeight={48}
+              gap={40}
+              pauseOnHover
+              scaleOnHover
+              fadeOut
+              fadeOutColor="#0f0f0f"
+              ariaLabel="Technology partners"
+            />
+          </IconContext.Provider>
         </motion.div>
       </Container>
     </SkillsSection>

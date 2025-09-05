@@ -4,7 +4,7 @@
 
   --logoloop-gap: 32px;
   --logoloop-logoHeight: 28px;
-  --logoloop-fadeColorAuto: #ffffff;
+  --logoloop-fadeColorAuto: #0f0f0f;
 }
 
 .logoloop--scale-hover {
@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   .logoloop {
-    --logoloop-fadeColorAuto: #0b0b0b;
+    --logoloop-fadeColorAuto: #0f0f0f;
   }
 }
 
@@ -32,18 +32,155 @@
 
 .logoloop__item {
   flex: 0 0 auto;
-  margin-right: var(--logoloop-gap);
+  margin-right: calc(var(--logoloop-gap) * 2);
   font-size: var(--logoloop-logoHeight);
   line-height: 1;
 }
 
 .logoloop__item:last-child {
-  margin-right: var(--logoloop-gap);
+  margin-right: calc(var(--logoloop-gap) * 2);
 }
 
 .logoloop__node {
   display: inline-flex;
   align-items: center;
+}
+
+/* Делаем белые точки прозрачными */
+.logoloop *[fill="white"],
+.logoloop *[fill="#ffffff"],
+.logoloop *[fill="#fff"],
+.logoloop *[stroke="white"],
+.logoloop *[stroke="#ffffff"],
+.logoloop *[stroke="#fff"],
+.logoloop circle[fill="white"],
+.logoloop circle[fill="#ffffff"],
+.logoloop circle[fill="#fff"],
+.logoloop ellipse[fill="white"],
+.logoloop ellipse[fill="#ffffff"],
+.logoloop ellipse[fill="#fff"],
+.logoloop *[style*="fill: white"],
+.logoloop *[style*="fill: #ffffff"],
+.logoloop *[style*="fill: #fff"],
+.logoloop *[style*="stroke: white"],
+.logoloop *[style*="stroke: #ffffff"],
+.logoloop *[style*="stroke: #fff"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Делаем все круги и эллипсы прозрачными */
+.logoloop circle,
+.logoloop ellipse {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Делаем красные точки прозрачными */
+.logoloop *[fill="red"],
+.logoloop *[fill="#ff0000"],
+.logoloop *[fill="#f00"],
+.logoloop *[stroke="red"],
+.logoloop *[stroke="#ff0000"],
+.logoloop *[stroke="#f00"],
+.logoloop *[style*="fill: red"],
+.logoloop *[style*="fill: #ff0000"],
+.logoloop *[style*="fill: #f00"],
+.logoloop *[style*="stroke: red"],
+.logoloop *[style*="stroke: #ff0000"],
+.logoloop *[style*="stroke: #f00"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Убираем фильтр, который изменяет все цвета */
+
+/* Делаем маленькие круглые элементы прозрачными */
+.logoloop circle[r="2"],
+.logoloop circle[r="3"],
+.logoloop circle[r="4"],
+.logoloop circle[r="5"],
+.logoloop circle[r="6"],
+.logoloop circle[r="7"],
+.logoloop circle[r="8"],
+.logoloop circle[r="9"],
+.logoloop circle[r="10"],
+.logoloop ellipse[rx="2"],
+.logoloop ellipse[rx="3"],
+.logoloop ellipse[rx="4"],
+.logoloop ellipse[rx="5"],
+.logoloop ellipse[ry="2"],
+.logoloop ellipse[ry="3"],
+.logoloop ellipse[ry="4"],
+.logoloop ellipse[ry="5"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Делаем элементы с очень маленькими размерами прозрачными */
+.logoloop *[width="2"],
+.logoloop *[width="3"],
+.logoloop *[width="4"],
+.logoloop *[width="5"],
+.logoloop *[height="2"],
+.logoloop *[height="3"],
+.logoloop *[height="4"],
+.logoloop *[height="5"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Восстанавливаем видимость основных логотипов и применяем цветовую схему сайта */
+.logoloop__node svg {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #00ff88 !important;
+}
+
+/* Восстанавливаем видимость всех элементов внутри логотипов, кроме кругов и эллипсов, и применяем цвет */
+.logoloop__node svg *:not(circle):not(ellipse) {
+  display: inherit !important;
+  opacity: inherit !important;
+  visibility: inherit !important;
+  fill: #00ff88 !important;
+  stroke: #00ff88 !important;
+  color: #00ff88 !important;
+}
+
+/* Восстанавливаем видимость основных SVG элементов логотипов и применяем цвет */
+.logoloop__node svg path,
+.logoloop__node svg rect,
+.logoloop__node svg polygon,
+.logoloop__node svg g {
+  display: inherit !important;
+  opacity: inherit !important;
+  visibility: inherit !important;
+  fill: #00ff88 !important;
+  stroke: #00ff88 !important;
+}
+
+/* Применяем цветовую схему ко всем элементам логотипов */
+.logoloop__node svg * {
+  fill: #00ff88 !important;
+  stroke: #00ff88 !important;
+  color: #00ff88 !important;
+}
+
+/* Применяем цветовую схему к самим элементам логотипов */
+.logoloop__node {
+  color: #00ff88 !important;
+}
+
+.logoloop__item {
+  color: #00ff88 !important;
+}
+
+/* Применяем цвет к иконкам react-icons */
+.logoloop__node .si-icon,
+.logoloop__node .fa-icon {
+  color: #00ff88 !important;
+  fill: #00ff88 !important;
 }
 
 .logoloop__item img {
