@@ -1,39 +1,42 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaTelegram } from 'react-icons/fa';
+import { useLanguage } from '../context/LanguageContext';
 
 const HeroSection = styled.section`
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 0 2rem;
+  padding: 120px 2rem 0;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
   
   @media (max-width: 768px) {
-    padding: 0 1rem;
+    padding: 80px 1rem 0;
+    align-items: center;
   }
   
   @media (max-width: 480px) {
-    padding: 0 0.5rem;
+    padding: 60px 0.5rem 0;
+    align-items: center;
   }
 `;
 
 const HeroContent = styled.div`
-  max-width: 1200px;
+  max-width: 550px;
   width: 100%;
   text-align: center;
   z-index: 10;
   position: relative;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 3rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  padding: 2rem 1.2rem;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 136, 0.2);
   box-sizing: border-box;
   margin: 0 auto;
   
@@ -68,9 +71,9 @@ const Greeting = styled(motion.div)`
 `;
 
 const Name = styled(motion.h1)`
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
   background: linear-gradient(135deg, #ffffff 0%, #00ff88 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -86,10 +89,10 @@ const Name = styled(motion.h1)`
 `;
 
 const Title = styled(motion.h2)`
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
   font-weight: 400;
   color: #ffffff;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -103,10 +106,10 @@ const Title = styled(motion.h2)`
 `;
 
 const Description = styled(motion.p)`
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #ffffff;
-  margin-bottom: 3rem;
-  max-width: 600px;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.8;
@@ -264,83 +267,88 @@ const SocialLink = styled(motion.a)`
 
 
 function Hero() {
+  const { language, translations } = useLanguage();
+  const t = translations[language];
+  const shouldReduce = useReducedMotion();
+  const baseDur = shouldReduce ? 0.4 : 0.8;
+  const baseDelay = shouldReduce ? 0.1 : 0.2;
+
   return (
     <HeroSection id="hero">
       <HeroContent>
         <Greeting
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: baseDur, delay: baseDelay }}
         >
-          Привет, я
+          {t.hero.greeting}
         </Greeting>
         
         <Name
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: baseDur, delay: baseDelay + 0.2 }}
         >
-          Андрей
+          {t.hero.name}
         </Name>
         
         <Title
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: baseDur, delay: baseDelay + 0.4 }}
         >
-          Full-Stack Разработчик
+          {t.hero.title}
         </Title>
         
         <Description
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: baseDur, delay: baseDelay + 0.6 }}
         >
-          Создаю цифровые миры на пересечении технологий и искусства. 
-          Превращаю сложные концепции в элегантные решения.
+          {t.hero.description}
         </Description>
         
         <CTAButtons
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
+          transition={{ duration: baseDur, delay: baseDelay + 0.8 }}
         >
           <CTAButton
             href="#projects"
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: shouldReduce ? 0.98 : 0.95 }}
           >
-            Посмотреть работы
+            {t.hero.viewWorks}
           </CTAButton>
           <SecondaryButton
             href="https://t.me/wrk_24_8"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: shouldReduce ? 1.03 : 1.05 }}
+            whileTap={{ scale: shouldReduce ? 0.99 : 0.95 }}
           >
-            Связаться
+            {t.hero.contact}
           </SecondaryButton>
         </CTAButtons>
         
         <SocialLinks
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: baseDur, delay: baseDelay + 1.0 }}
         >
           <SocialLink
             href="https://github.com/parasha3a"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: shouldReduce ? 1.05 : 1.1 }}
+            whileTap={{ scale: shouldReduce ? 0.97 : 0.9 }}
           >
             <FaGithub size={20} />
           </SocialLink>
           <SocialLink
             href="#"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: shouldReduce ? 1.05 : 1.1 }}
+            whileTap={{ scale: shouldReduce ? 0.97 : 0.9 }}
           >
             <FaLinkedin size={20} />
           </SocialLink>
@@ -348,8 +356,8 @@ function Hero() {
             href="https://t.me/wrk_24_8"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: shouldReduce ? 1.05 : 1.1 }}
+            whileTap={{ scale: shouldReduce ? 0.97 : 0.9 }}
           >
             <FaTelegram size={20} />
           </SocialLink>

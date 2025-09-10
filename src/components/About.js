@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaCode } from 'react-icons/fa';
+import { useLanguage } from '../context/LanguageContext';
 
 const AboutSection = styled.section`
   padding: 6rem 2rem;
@@ -158,6 +159,8 @@ const CardText = styled.p`
 `;
 
 function About() {
+  const { language, translations } = useLanguage();
+  const t = translations[language];
   return (
     <AboutSection id="about">
       <Container>
@@ -167,7 +170,7 @@ function About() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Обо мне
+          {t.about.title}
         </SectionTitle>
         
         <SectionSubtitle
@@ -176,7 +179,7 @@ function About() {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Разработчик, который создает не просто код, а цифровые миры
+          {t.about.subtitle}
         </SectionSubtitle>
         
         <ContentGrid>
@@ -187,9 +190,7 @@ function About() {
               transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              Я Андрей — разработчик с <strong>3+ годами Full-Stack опыта</strong>. 
-              Специализируюсь на React, Node.js, Python и современных веб-технологиях. 
-              Имею опыт разработки корпоративных приложений, e-commerce платформ и мобильных решений.
+              {t.about.experience}
             </MainText>
             
             <HighlightText
@@ -198,8 +199,7 @@ function About() {
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              Создаю масштабируемые системы с использованием <strong>Docker, AWS и современных DevOps практик</strong>. 
-              Мой подход сочетает аналитику и креативность: я разбиваю проблемы на атомы и собираю их в нечто большее, чем просто функциональность.
+              {t.about.skills}
             </HighlightText>
             
             <HighlightText
@@ -208,8 +208,7 @@ function About() {
               transition={{ duration: 0.8, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              Меня вдохновляют проекты на пересечении <strong>технологий и искусства</strong>, 
-              экспериментальные интерфейсы и системы, которые удивляют пользователей.
+              {t.about.passion}
             </HighlightText>
             
             <StatsGrid
@@ -223,21 +222,21 @@ function About() {
                 transition={{ duration: 0.3 }}
               >
                 <StatNumber>3+</StatNumber>
-                <StatLabel>Года опыта</StatLabel>
+                <StatLabel>{t.about.stats.years}</StatLabel>
               </StatCard>
               <StatCard
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <StatNumber>50+</StatNumber>
-                <StatLabel>Довольных клиентов</StatLabel>
+                <StatLabel>{t.about.stats.clients}</StatLabel>
               </StatCard>
               <StatCard
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <StatNumber>100+</StatNumber>
-                <StatLabel>Реализованных проектов</StatLabel>
+                <StatLabel>{t.about.stats.projects}</StatLabel>
               </StatCard>
             </StatsGrid>
           </TextContent>
@@ -252,9 +251,9 @@ function About() {
               <CardIcon>
                 <FaCode />
               </CardIcon>
-              <CardTitle>Full-Stack Разработка</CardTitle>
+              <CardTitle>{t.about.card.title}</CardTitle>
               <CardText>
-                Создаю полноценные веб-приложения от фронтенда до бэкенда
+                {t.about.card.text}
               </CardText>
             </FloatingCard>
           </VisualContent>

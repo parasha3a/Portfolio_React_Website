@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
 import { FaGithub, FaHeart } from 'react-icons/fa';
 
@@ -91,55 +92,57 @@ const Quote = styled(motion.div)`
 `;
 
 function Footer() {
+  const { language, translations } = useLanguage();
+  const t = translations[language];
   return (
     <FooterContainer>
       <Container>
         <FooterContent>
           <FooterSection>
-            <FooterTitle>Андрей</FooterTitle>
+            <FooterTitle>{t.footer.name}</FooterTitle>
             <FooterText>
-              Full-Stack разработчик, создающий цифровые миры на пересечении технологий и искусства
+              {t.footer.description}
             </FooterText>
           </FooterSection>
           
           <FooterSection>
-            <FooterTitle>Быстрые ссылки</FooterTitle>
+            <FooterTitle>{t.footer.quickLinks.title}</FooterTitle>
             <FooterLinks>
               <FooterLink
                 href="#about"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Обо мне
+                {t.footer.quickLinks.about}
               </FooterLink>
               <FooterLink
                 href="#skills"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Навыки
+                {t.footer.quickLinks.skills}
               </FooterLink>
               <FooterLink
                 href="#projects"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Проекты
+                {t.footer.quickLinks.projects}
               </FooterLink>
               <FooterLink
                 href="#contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Контакты
+                {t.footer.quickLinks.contacts}
               </FooterLink>
             </FooterLinks>
           </FooterSection>
           
           <FooterSection>
-            <FooterTitle>Связаться</FooterTitle>
+            <FooterTitle>{t.footer.contact.title}</FooterTitle>
             <FooterText>
-              Готов обсудить ваш проект или просто пообщаться о технологиях
+              {t.footer.contact.description}
             </FooterText>
           </FooterSection>
         </FooterContent>
@@ -150,20 +153,20 @@ function Footer() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          "Код — это больше, чем инструкции — это способ формировать опыт и вдохновлять людей."
+          "{t.footer.quote}"
         </Quote>
         
         <Divider />
         
         <Copyright>
-          <span>© 2025 Андрей. Создано с</span>
+          <span>{t.footer.copyright.text}</span>
           <HeartIcon
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             <FaHeart />
           </HeartIcon>
-          <span>и React</span>
+          <span>{t.footer.copyright.and} {t.footer.copyright.tech}</span>
         </Copyright>
         
         <FooterLinks style={{ marginBottom: 0 }}>

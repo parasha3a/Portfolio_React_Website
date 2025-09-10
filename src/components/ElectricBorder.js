@@ -8,18 +8,49 @@ const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thi
   const svgRef = useRef(null);
   const rootRef = useRef(null);
   const strokeRef = useRef(null);
+  const rafIdRef = useRef(0);
+  const lastSizeRef = useRef({ w: 0, h: 0 });
+  const visibilityRef = useRef({ inViewport: true, docVisible: true, visible: true });
+
+  const isLowPower = () => {
+    const cores = typeof navigator !== 'undefined' && navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 8;
+    const mem = typeof navigator !== 'undefined' && navigator.deviceMemory ? navigator.deviceMemory : 8;
+    const isMobile = typeof navigator !== 'undefined' && /mobi|android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    return cores <= 4 || mem <= 4 || isMobile;
+  };
+
+  const prefersReduced = () => {
+    try {
+      return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch {
+      return false;
+    }
+  };
+
+  const scheduleUpdate = () => {
+    if (rafIdRef.current) return;
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = 0;
+      updateAnim();
+    });
+  };
 
   const updateAnim = () => {
     const svg = svgRef.current;
     const host = rootRef.current;
     if (!svg || !host) return;
-
+    if (visibilityRef.current && !visibilityRef.current.visible) return;
     if (strokeRef.current) {
       strokeRef.current.style.filter = `url(#${filterId})`;
     }
 
     const width = Math.max(1, Math.round(host.clientWidth || host.getBoundingClientRect().width || 0));
     const height = Math.max(1, Math.round(host.clientHeight || host.getBoundingClientRect().height || 0));
+    if (lastSizeRef.current.w === width && lastSizeRef.current.h === height) {
+      // size unchanged, but still update timing/quality below
+    } else {
+      lastSizeRef.current = { w: width, h: height };
+    }
 
     const dyAnims = Array.from(svg.querySelectorAll('feOffset > animate[attributeName="dy"]'));
     if (dyAnims.length >= 2) {
@@ -34,18 +65,39 @@ const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thi
     }
 
     const baseDur = 6;
-    const dur = Math.max(0.001, baseDur / (speed || 1));
+    const reduced = prefersReduced();
+    const low = isLowPower();
+    const speedFactor = reduced ? Math.max(0.5, (speed || 1) * 0.6) : speed || 1;
+    const dur = Math.max(0.001, baseDur / speedFactor);
     [...dyAnims, ...dxAnims].forEach(a => a.setAttribute('dur', `${dur}s`));
 
     const disp = svg.querySelector('feDisplacementMap');
-    if (disp) disp.setAttribute('scale', String(30 * (chaos || 1)));
+    if (disp) {
+      const chaosScale = (chaos || 1) * (low ? 0.7 : 1) * (reduced ? 0.4 : 1);
+      disp.setAttribute('scale', String(30 * chaosScale));
+    }
+
+    const turbules = Array.from(svg.querySelectorAll('feTurbulence'));
+    const targetOctaves = reduced ? 3 : low ? 6 : 10;
+    turbules.forEach(t => {
+      t.setAttribute('numOctaves', String(targetOctaves));
+      const bf = reduced ? 0.01 : low ? 0.015 : 0.02;
+      t.setAttribute('baseFrequency', String(bf));
+    });
 
     const filterEl = svg.querySelector(`#${CSS.escape(filterId)}`);
     if (filterEl) {
-      filterEl.setAttribute('x', '-200%');
-      filterEl.setAttribute('y', '-200%');
-      filterEl.setAttribute('width', '500%');
-      filterEl.setAttribute('height', '500%');
+      if (low || reduced) {
+        filterEl.setAttribute('x', '-50%');
+        filterEl.setAttribute('y', '-50%');
+        filterEl.setAttribute('width', '200%');
+        filterEl.setAttribute('height', '200%');
+      } else {
+        filterEl.setAttribute('x', '-200%');
+        filterEl.setAttribute('y', '-200%');
+        filterEl.setAttribute('width', '500%');
+        filterEl.setAttribute('height', '500%');
+      }
     }
 
     requestAnimationFrame(() => {
@@ -68,10 +120,32 @@ const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thi
 
   useLayoutEffect(() => {
     if (!rootRef.current) return;
-    const ro = new ResizeObserver(() => updateAnim());
-    ro.observe(rootRef.current);
+    const host = rootRef.current;
+    const ro = new ResizeObserver(() => scheduleUpdate());
+    ro.observe(host);
+    const updateVisibility = () => {
+      const visible = visibilityRef.current.docVisible && visibilityRef.current.inViewport;
+      visibilityRef.current.visible = visible;
+      scheduleUpdate();
+    };
+    const onVis = () => {
+      visibilityRef.current.docVisible = document.visibilityState !== 'hidden';
+      updateVisibility();
+    };
+    const io = new IntersectionObserver(entries => {
+      const entry = entries[0];
+      visibilityRef.current.inViewport = !!entry?.isIntersecting;
+      updateVisibility();
+    }, { threshold: 0 });
+    io.observe(host);
+    document.addEventListener('visibilitychange', onVis);
     updateAnim();
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      try { io.disconnect(); } catch {}
+      document.removeEventListener('visibilitychange', onVis);
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

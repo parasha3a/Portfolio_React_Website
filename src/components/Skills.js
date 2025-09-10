@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
 import { 
   FaHtml5, FaCss3Alt, FaJs, FaNode, 
@@ -41,22 +42,64 @@ const SectionSubtitle = styled(motion.p)`
 `;
 
 const SkillsGrid = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
   margin-bottom: 4rem;
-  justify-content: center;
-  overflow-x: auto;
+  justify-items: center;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
   
-  @media (max-width: 1200px) {
-    flex-wrap: wrap;
-    gap: 1.5rem;
+  /* Первый ряд - 3 элемента */
+  & > div:nth-child(1) {
+    grid-column: 1 / 3;
+  }
+  
+  & > div:nth-child(2) {
+    grid-column: 3 / 5;
+  }
+  
+  & > div:nth-child(3) {
+    grid-column: 5 / 7;
+  }
+  
+  /* Второй ряд - 2 элемента по центру */
+  & > div:nth-child(4) {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+  
+  & > div:nth-child(5) {
+    grid-column: 4 / 6;
+    grid-row: 2;
+  }
+  
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    
+    & > div:nth-child(1),
+    & > div:nth-child(2),
+    & > div:nth-child(3),
+    & > div:nth-child(4),
+    & > div:nth-child(5) {
+      grid-column: auto;
+      grid-row: auto;
+    }
   }
   
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    
+    & > div:nth-child(1),
+    & > div:nth-child(2),
+    & > div:nth-child(3),
+    & > div:nth-child(4),
+    & > div:nth-child(5) {
+      grid-column: auto;
+      grid-row: auto;
+    }
   }
 `;
 
@@ -64,11 +107,12 @@ const SkillCategory = styled(motion.div)`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
-  padding: 1rem;
+  padding: 1.5rem;
   transition: all 0.3s ease;
-  flex: 1;
-  min-width: 200px;
-  max-width: 220px;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
   
   &:hover {
     transform: translateY(-5px);
@@ -76,16 +120,40 @@ const SkillCategory = styled(motion.div)`
     background: rgba(0, 255, 136, 0.05);
   }
   
-  @media (max-width: 1200px) {
-    min-width: 240px;
-    max-width: 280px;
-    padding: 1.2rem;
+  /* Блоки во втором ряду имеют одинаковую высоту */
+  &:nth-child(4),
+  &:nth-child(5) {
+    min-height: 280px;
   }
   
   @media (max-width: 768px) {
-    min-width: 280px;
-    max-width: 100%;
-    padding: 1.5rem;
+    max-width: 90%;
+    padding: 2rem;
+    min-height: auto;
+    animation: mobileGlow 2s ease-in-out infinite alternate;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+    
+    &:nth-child(4),
+    &:nth-child(5) {
+      min-height: auto;
+    }
+    
+    &:nth-child(1) { animation-delay: 0s; }
+    &:nth-child(2) { animation-delay: 0.3s; }
+    &:nth-child(3) { animation-delay: 0.6s; }
+    &:nth-child(4) { animation-delay: 0.9s; }
+    &:nth-child(5) { animation-delay: 1.2s; }
+  }
+  
+  @keyframes mobileGlow {
+    0% {
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    100% {
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.25);
+      border-color: rgba(0, 255, 136, 0.2);
+    }
   }
 `;
 
@@ -112,6 +180,8 @@ const SkillsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  flex: 1;
+  justify-content: space-between;
 `;
 
 const SkillItem = styled.div`
@@ -152,56 +222,57 @@ const SkillPercentage = styled.span`
 `;
 
 
-const skillData = [
+const getSkillData = (t) => [
   {
-    category: 'Frontend',
+    category: t.skills.categories.frontend,
     icon: <FaHtml5 />,
     skills: [
-      { name: 'HTML/CSS', level: 90 },
-      { name: 'JavaScript', level: 85 },
-      { name: 'React', level: 80 },
-      { name: 'Responsive Design', level: 85 }
+      { name: t.skills.items.htmlCss, level: 90 },
+      { name: t.skills.items.javascript, level: 85 },
+      { name: t.skills.items.react, level: 80 },
+      { name: t.skills.items.responsiveDesign, level: 85 }
     ]
   },
   {
-    category: 'Backend',
+    category: t.skills.categories.backend,
     icon: <FaNode />,
     skills: [
-      { name: 'Node.js', level: 75 },
-      { name: 'Python', level: 80 },
-      { name: 'APIs', level: 85 },
-      { name: 'Server Architecture', level: 70 }
+      { name: t.skills.items.nodejs, level: 75 },
+      { name: t.skills.items.python, level: 80 },
+      { name: t.skills.items.apis, level: 85 },
+      { name: t.skills.items.serverArch, level: 70 }
     ]
   },
   {
-    category: 'Databases',
+    category: t.skills.categories.databases,
     icon: <FaDatabase />,
     skills: [
-      { name: 'SQL', level: 75 },
-      { name: 'MongoDB', level: 70 },
-      { name: 'Data Modeling', level: 80 },
-      { name: 'Performance', level: 70 }
+      { name: t.skills.items.sql, level: 75 },
+      { name: t.skills.items.mongodb, level: 70 },
+      { name: t.skills.items.dataModeling, level: 80 },
+      { name: t.skills.items.performance, level: 70 }
     ]
   },
   {
-    category: 'Web3 & Blockchain',
+    category: t.skills.categories.web3,
     icon: <SiEthereum />,
     skills: [
-      { name: 'Solidity', level: 75 },
-      { name: 'Rust', level: 70 },
-      { name: 'Smart Contracts', level: 80 },
-      { name: 'DeFi Protocols', level: 65 },
-      { name: 'Web3.js', level: 70 }
+      { name: t.skills.items.solidity, level: 75 },
+      { name: t.skills.items.rust, level: 70 },
+      { name: t.skills.items.smartContracts, level: 80 },
+      { name: t.skills.items.defi, level: 65 },
+      { name: t.skills.items.web3js, level: 70 }
     ]
   },
   {
-    category: 'DevOps & Tools',
+    category: t.skills.categories.devops,
     icon: <FaCloud />,
     skills: [
-      { name: 'Git', level: 85 },
-      { name: 'Docker', level: 65 },
-      { name: 'CI/CD', level: 70 },
-      { name: 'Cloud Services', level: 65 }
+      { name: t.skills.items.git, level: 85 },
+      { name: t.skills.items.docker, level: 65 },
+      { name: t.skills.items.cicd, level: 70 },
+      { name: t.skills.items.cloud, level: 65 },
+      { name: t.skills.items.kubernetes, level: 60 }
     ]
   }
 ];
@@ -226,6 +297,8 @@ const techLogos = [
 ];
 
 function Skills() {
+  const { language, translations } = useLanguage();
+  const t = translations[language];
   return (
     <SkillsSection id="skills">
       <Container>
@@ -235,7 +308,7 @@ function Skills() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Навыки
+          {t.skills.title}
         </SectionTitle>
         
         <SectionSubtitle
@@ -244,11 +317,11 @@ function Skills() {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Технологии и инструменты, с которыми я работаю
+          {t.skills.subtitle}
         </SectionSubtitle>
         
         <SkillsGrid>
-          {skillData.map((category, index) => (
+          {getSkillData(t).map((category, index) => (
             <SkillCategory
               key={category.category}
               initial={{ opacity: 0, y: 30 }}

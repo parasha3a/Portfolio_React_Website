@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { LanguageProvider } from './context/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import CardNav from './components/CardNav';
 import Hero from './components/Hero';
@@ -105,7 +106,8 @@ function App() {
   }
 
   return (
-    <AppContainer>
+    <LanguageProvider>
+      <AppContainer>
       <BackgroundEffect>
         <PixelBlast
           variant="circle"
@@ -147,6 +149,7 @@ function App() {
         </AnimatePresence>
       </ContentWrapper>
     </AppContainer>
+    </LanguageProvider>
   );
 }
 

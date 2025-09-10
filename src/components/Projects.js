@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaPython, FaJs } from 'react-icons/fa';
 import ElectricBorder from './ElectricBorder';
@@ -116,6 +117,72 @@ const ProjectCard = styled(motion.div)`
   &:hover {
     transform: translateY(-10px);
     background: rgba(0, 255, 136, 0.05);
+  }
+`;
+
+const MobileProjectCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 20px;
+  overflow: visible;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, 
+      rgba(0, 255, 136, 0.6),
+      rgba(0, 255, 136, 0.2),
+      rgba(0, 255, 136, 0.6)
+    );
+    background-size: 200% 200%;
+    animation: borderGlow 3s linear infinite;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba(0, 255, 136, 0.08);
+    border-color: rgba(0, 255, 136, 0.6);
+    box-shadow: 
+      0 4px 20px rgba(0, 255, 136, 0.2),
+      inset 0 1px 0 rgba(0, 255, 136, 0.2);
+    
+    &::before {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+      background: rgba(0, 255, 136, 0.4);
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
   }
 `;
 
@@ -365,27 +432,21 @@ const FeaturedButton = styled(motion.a)`
   }
 `;
 
-const projects = [
+const getProjects = (t) => [
   {
-    title: 'VK-Crypto-Tracker',
-    description: 'VK Mini App для отслеживания криптовалют с интерактивными графиками, P2P маркетплейсом и калькулятором валют.',
-    tech: ['TypeScript', 'React', 'VK Mini Apps'],
+    ...t.projects.items[0],
     icon: <FaJs />,
     github: 'https://github.com/parasha3a/VK-Crypto-Tracker',
     live: null
   },
   {
-    title: 'Telegram-bot-for-monitoring-public-procurement',
-    description: 'Telegram бот для мониторинга государственных закупок с автоматическими уведомлениями и аналитикой.',
-    tech: ['Python', 'Telegram API', 'Web Scraping'],
+    ...t.projects.items[1],
     icon: <FaPython />,
     github: 'https://github.com/parasha3a/Telegram-bot-for-monitoring-public-procurement',
     live: null
   },
   {
-    title: 'Portfolio Website',
-    description: 'Современный адаптивный сайт-портфолио с анимациями и интерактивными элементами.',
-    tech: ['React', 'JavaScript', 'CSS3'],
+    ...t.projects.items[2],
     icon: <FaJs />,
     github: 'https://github.com/parasha3a/portfolio-website',
     live: 'https://parasha3a.github.io/portfolio-website'
@@ -393,6 +454,8 @@ const projects = [
 ];
 
 function Projects() {
+  const { language, translations } = useLanguage();
+  const t = translations[language];
   const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
@@ -415,7 +478,7 @@ function Projects() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Проекты
+          {t.projects.title}
         </SectionTitle>
         
         <SectionSubtitle
@@ -424,7 +487,7 @@ function Projects() {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Мои работы и эксперименты в области разработки
+          {t.projects.subtitle}
         </SectionSubtitle>
         
         <FeaturedProject
@@ -433,10 +496,9 @@ function Projects() {
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <FeaturedTitle>Экспериментальные Проекты</FeaturedTitle>
+          <FeaturedTitle>{t.projects.featured.title}</FeaturedTitle>
           <FeaturedDescription>
-            В моих репозиториях вы найдете не только production-ready проекты, но и смелые эксперименты — 
-            потому что иногда нестандартный путь ведет к лучшему результату.
+            {t.projects.featured.description}
           </FeaturedDescription>
           <FeaturedButton
             href="https://github.com/parasha3a"
@@ -446,14 +508,14 @@ function Projects() {
             whileTap={{ scale: 0.95 }}
           >
             <FaGithub size={20} />
-            Посмотреть на GitHub
+            {t.projects.featured.button}
           </FeaturedButton>
         </FeaturedProject>
         
         <ProjectsGrid>
-          {projects.map((project, index) => (
+          {getProjects(t).map((project, index) => (
             isMobile ? (
-              <ProjectCard
+              <MobileProjectCard
                 key={project.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -496,12 +558,12 @@ function Projects() {
                         whileTap={{ scale: 0.95 }}
                       >
                         <FaExternalLinkAlt size={16} />
-                        Демо
+                        {t.projects.links.demo}
                       </ProjectLink>
                     )}
                   </ProjectLinks>
                 </ProjectContent>
-              </ProjectCard>
+              </MobileProjectCard>
             ) : (
               <ElectricBorder
                 key={project.title}
@@ -548,7 +610,7 @@ function Projects() {
                         whileTap={{ scale: 0.95 }}
                       >
                         <FaGithub size={16} />
-                        Код
+                        {t.projects.links.code}
                       </ProjectLink>
                       
                       {project.live && (

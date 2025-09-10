@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { GoArrowUpRight } from 'react-icons/go';
+import { useLanguage } from '../context/LanguageContext';
 import './CardNav.css';
 
 const CardNav = ({
@@ -14,8 +15,11 @@ const CardNav = ({
   buttonBgColor,
   buttonTextColor
 }) => {
+  const { language, toggleLanguage, translations } = useLanguage();
+  const t = translations[language];
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navRef = useRef(null);
   const cardsRef = useRef([]);
   const tlRef = useRef(null);
@@ -89,6 +93,9 @@ const CardNav = ({
 
   useLayoutEffect(() => {
     const handleResize = () => {
+      const mobile = window.matchMedia('(max-width: 768px)').matches;
+      setIsMobile(mobile);
+      
       if (!tlRef.current) return;
 
       if (isExpanded) {
@@ -110,6 +117,9 @@ const CardNav = ({
       }
     };
 
+    // Проверяем размер экрана при первой загрузке
+    handleResize();
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,13 +163,16 @@ const CardNav = ({
             <img src={logo} alt={logoAlt} className="logo" />
           </div>
 
-          <button
-            type="button"
-            className="card-nav-cta-button"
-            style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-          >
-            Get Started
-          </button>
+          {!isMobile && (
+            <button
+              type="button"
+              className="card-nav-cta-button"
+              onClick={toggleLanguage}
+              style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            >
+              {t.switchLang}
+            </button>
+          )}
         </div>
 
         <div className="card-nav-content" aria-hidden={!isExpanded}>
@@ -199,6 +212,26 @@ const CardNav = ({
               </div>
             </div>
           ))}
+          {isMobile && (
+            <div className="language-switcher">
+              <button
+                type="button"
+                className="language-option"
+                onClick={() => language !== 'ru' && toggleLanguage()}
+                data-active={language === 'ru'}
+              >
+                RU
+              </button>
+              <button
+                type="button"
+                className="language-option"
+                onClick={() => language !== 'en' && toggleLanguage()}
+                data-active={language === 'en'}
+              >
+                EN
+              </button>
+            </div>
+          )}
         </div>
       </nav>
     </div>

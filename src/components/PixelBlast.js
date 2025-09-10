@@ -318,7 +318,7 @@ const PixelBlast = ({
   noiseAmount = 0
 }) => {
   const containerRef = useRef(null);
-  const visibilityRef = useRef({ visible: true });
+  const visibilityRef = useRef({ visible: true, docVisible: true, inViewport: true });
   const speedRef = useRef(speed);
 
   const threeRef = useRef(null);
@@ -338,6 +338,12 @@ const PixelBlast = ({
           break;
         }
     }
+    let onVis;
+    let io;
+    let onPointerDown;
+    let onPointerMove;
+    let reduceMotion;
+    let applyMotionPref;
     if (mustReinit) {
       if (threeRef.current) {
         const t = threeRef.current;
@@ -351,19 +357,28 @@ const PixelBlast = ({
         threeRef.current = null;
       }
       const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl2', { antialias, alpha: true });
+      const gl = canvas.getContext('webgl2', { antialias: antialias, alpha: true });
       if (!gl) return;
+      const isLowPower = () => {
+        const cores = typeof navigator !== 'undefined' && navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 8;
+        const mem = typeof navigator !== 'undefined' && navigator.deviceMemory ? navigator.deviceMemory : 8;
+        const isMobile = typeof navigator !== 'undefined' && /mobi|android|iphone|ipad|ipod/i.test(navigator.userAgent);
+        return cores <= 4 || mem <= 4 || isMobile;
+      };
+      const getOptimalPixelRatio = () => {
+        const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+        if (isLowPower()) return Math.min(dpr, 1.25);
+        return Math.min(dpr, 2);
+      };
       const renderer = new THREE.WebGLRenderer({
         canvas,
         context: gl,
-        antialias,
+        antialias: antialias,
         alpha: true
       });
       renderer.domElement.style.width = '100%';
       renderer.domElement.style.height = '100%';
-      renderer.domElement.style.minWidth = '100vw';
-      renderer.domElement.style.minHeight = '100vh';
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(getOptimalPixelRatio());
       container.appendChild(renderer.domElement);
       const uniforms = {
         uResolution: { value: new THREE.Vector2(0, 0) },
@@ -406,11 +421,21 @@ const PixelBlast = ({
         uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
         if (threeRef.current?.composer)
           threeRef.current.composer.setSize(renderer.domElement.width, renderer.domElement.height);
+        renderer.setPixelRatio(getOptimalPixelRatio());
         uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio();
       };
       setSize();
       const ro = new ResizeObserver(setSize);
       ro.observe(container);
+      reduceMotion = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      applyMotionPref = () => {
+        const scale = reduceMotion && reduceMotion.matches ? 0.6 : 1;
+        speedRef.current = (typeof speed === 'number' ? speed : 1) * scale;
+      };
+      applyMotionPref();
+      if (reduceMotion && typeof reduceMotion.addEventListener === 'function') {
+        reduceMotion.addEventListener('change', applyMotionPref);
+      }
       const randomFloat = () => {
         if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
           const u32 = new Uint32Array(1);
@@ -471,17 +496,25 @@ const PixelBlast = ({
           h: renderer.domElement.height
         };
       };
-      const onPointerDown = e => {
+      onPointerDown = e => {
         const { fx, fy } = mapToPixels(e);
         const ix = threeRef.current?.clickIx ?? 0;
         uniforms.uClickPos.value[ix].set(fx, fy);
         uniforms.uClickTimes.value[ix] = uniforms.uTime.value;
         if (threeRef.current) threeRef.current.clickIx = (ix + 1) % MAX_CLICKS;
       };
-      const onPointerMove = e => {
-        if (!touch) return;
-        const { fx, fy, w, h } = mapToPixels(e);
-        touch.addTouch({ x: fx / w, y: fy / h });
+      let moveScheduled = false;
+      let lastMoveEvent = null;
+      onPointerMove = e => {
+        lastMoveEvent = e;
+        if (moveScheduled) return;
+        moveScheduled = true;
+        requestAnimationFrame(() => {
+          moveScheduled = false;
+          if (!touch || !lastMoveEvent) return;
+          const { fx, fy, w, h } = mapToPixels(lastMoveEvent);
+          touch.addTouch({ x: fx / w, y: fy / h });
+        });
       };
       renderer.domElement.addEventListener('pointerdown', onPointerDown, {
         passive: true
@@ -490,6 +523,21 @@ const PixelBlast = ({
         passive: true
       });
       let raf = 0;
+      const updateVisibility = () => {
+        const visible = visibilityRef.current.docVisible && visibilityRef.current.inViewport;
+        visibilityRef.current.visible = visible;
+      };
+      onVis = () => {
+        visibilityRef.current.docVisible = document.visibilityState !== 'hidden';
+        updateVisibility();
+      };
+      io = new IntersectionObserver(entries => {
+        const entry = entries[0];
+        visibilityRef.current.inViewport = !!entry?.isIntersecting;
+        updateVisibility();
+      }, { threshold: 0.0 });
+      io.observe(renderer.domElement);
+      document.addEventListener('visibilitychange', onVis);
       const animate = () => {
         if (autoPauseOffscreen && !visibilityRef.current.visible) {
           raf = requestAnimationFrame(animate);
@@ -544,7 +592,7 @@ const PixelBlast = ({
       if (transparent) t.renderer.setClearAlpha(0);
       else t.renderer.setClearColor(0x000000, 1);
       if (t.liquidEffect) {
-        const uStrength = t.liquidEffect;
+        const uStrength = t.liquidEffect.uniforms.get('uStrength');
         if (uStrength) uStrength.value = liquidStrength;
         const uFreq = t.liquidEffect.uniforms.get('uFreq');
         if (uFreq) uFreq.value = liquidWobbleSpeed;
@@ -563,6 +611,13 @@ const PixelBlast = ({
       t.composer?.dispose();
       t.renderer.dispose();
       if (t.renderer.domElement.parentElement === container) container.removeChild(t.renderer.domElement);
+      if (onVis) document.removeEventListener('visibilitychange', onVis);
+      if (io) io.disconnect();
+      if (reduceMotion && typeof reduceMotion.removeEventListener === 'function' && applyMotionPref) {
+        reduceMotion.removeEventListener('change', applyMotionPref);
+      }
+      if (onPointerDown) t.renderer.domElement.removeEventListener('pointerdown', onPointerDown);
+      if (onPointerMove) t.renderer.domElement.removeEventListener('pointermove', onPointerMove);
       threeRef.current = null;
     };
   }, [
